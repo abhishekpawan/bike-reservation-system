@@ -1,38 +1,530 @@
-.App {
-  text-align: center;
+@import url("https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900&display=swap");
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+html {
+  font-size: 62.5%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  box-sizing: border-box;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
+/* -----LOGIN---- */
 
-.App-header {
-  background-color: #282c34;
+section.login {
+  position: relative;
   min-height: 100vh;
+
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    156deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(33, 32, 28, 1) 53%,
+    rgba(23, 21, 20, 1) 100%
+  );
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+section.login .loginImage {
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+section.login .loginImage img {
+  width: 90%;
+ 
+}
+
+section.login .container {
+  position: relative;
+  /* margin-top: 100px; */
+  width: 400px;
+  height: 500px;
+  background: #fff;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+section.login .container .user {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+section.login .container .user .formBx {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  transition: 0.5s;
+}
+section.login .container .user .formBx form {
+  width: 400px;
+}
+
+section.login .container .user .formBx form h2 {
+  font-size: 18px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+section.login .container .user .formBx form input {
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  background: #f5f5f5;
+  color: #333;
+  border: none;
+  outline: none;
+  box-shadow: none;
+  margin: 8px 0;
+  font-size: 14px;
+  letter-spacing: 1px;
+  font-weight: 300;
+  border-radius: 7px;
+}
+
+section.login .container .user .formBx form input:focus {
+  outline: none;
+  border: 1px solid #ffb23f;
+  color: #ffb23f;
+}
+
+section.login .container .user .formBx form input[type="password"],
+section.login .container .user .formBx form input[type="text"] {
+  border-radius: 7px 0px 0px 7px;
+}
+
+section.login .container .user .formBx form button {
+  position: relative;
+  /* left: 30%; */
+  width: 140px;
+  height: 35px;
+  background: #1b1a17;
+  color: #000;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: 0.5s;
+  border: none;
+  border-radius: 7px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+  margin: 8px 0px;
+}
+
+section.login .container .user .formBx form button.btn-4 {
+  background-color: #ffb23f;
+  background-image: linear-gradient(315deg, #ffb23f 0%, #FFDBA5 74%);
+  line-height: 42px;
+  padding: 0;
+  border: none;
+}
+
+section.login .container .user .formBx form button.btn-4:hover {
+  background-color: #ffb23f;
+  background-image: linear-gradient(315deg, #fd9903 0%, #fbbe62 74%);
+}
+
+section.login .container .user .formBx form .bt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+section.login .container .user .formBx form .pd {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+section.login .container .user .formBx form i {
+  /* position: absolute;
+    bottom: 48%;
+    right: 12%; */
+  height: 42px;
+  padding-left: 5px;
+  padding-right: 5px;
+  font-size: 25px;
+  cursor: pointer;
+  color: #1b1a17;
+  background: #f5f5f5;
+  border-radius: 0px 7px 7px 0px;
+}
+section .container .user .formBx form .signup {
+  text-align: center;
+  position: relative;
+  margin-top: 20px;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #555;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+section .container .user .formBx form p {
+  background-color: transparent;
+  box-shadow: none;
+  /* color: #1B1A17; */
+}
+section .container .user .formBx form .signup a {
+  font-weight: 600;
+  text-decoration: none;
+  color: #1b1a17;
+}
+
+@media (max-width: 991px) {
+  section.login .container {
+    max-width: 400px;
+  }
+
+  section.login .container .imgBx {
+    display: none;
+  }
+
+  section.login .container .user .formBx {
+    width: 100%;
+  }
+}
+
+/* -----LOGIN---- */
+
+.homeContainer {
+  min-height: 100vh;
+  margin: 0;
+  margin: auto;
+  width: 100%;
+  background: rgb(0, 0, 0);
+  background: linear-gradient(
+    156deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(33, 32, 28, 1) 53%,
+    rgba(23, 21, 20, 1) 100%
+  );
+}
+
+/* -----HEADER---- */
+
+.header {
+  padding-top: 10px;
+  margin: 0px 30px 10px 30px;
+  border-bottom: #ffb23f 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header .title img {
+  padding: 10px;
+  width: 70%;
+}
+
+.header .userDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: #fff;
+  font-family: "Poppins", sans-serif;
+}
+.header .userDetails .username {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 0;
+}
+.header .userDetails .username span {
+  color: #ffb23f;
+}
+.header .userDetails .email {
+  font-size: 10px;
+  margin: 0;
+  margin-bottom: 10px;
+}
+.header .userDetails .buttons{
+  display: flex;
+}
+.header .userDetails button.btn-4 {
+  width: 120px;
+  height: 30px;
+  background: #1b1a17;
+  color: #000;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: 0.5s;
+  border: none;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0px 0px 15px 15px;
+  background-color: #ffb23f;
+  background-image: linear-gradient(315deg, #ffb23f 0%, #FFDBA5 74%);
+  line-height: 42px;
+  padding: 0;
+}
+
+.header .userDetails button.btn-4:hover {
+  background-color: #ffb23f;
+  background-image: linear-gradient(315deg, #fd9903 0%, #fbbe62 74%);
+}
+
+@media (max-width: 576px) {
+  .header {
+    position: relative;
+    padding-top: 10px;
+    margin: 0px 10px 10px 10px;
+    border-bottom: #ffb23f 1px solid;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .header .title img {
+    padding: 10px;
+    width: 100%;
+  }
+
+  .header .userDetails {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: #fff;
+    height: 80px;
+    font-family: "Poppins", sans-serif;
+  }
+  .header .userDetails .username {
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .header .userDetails .username span {
+    color: #ffb23f;
+  }
+  .header .userDetails .email {
+    font-size: 8px;
+    margin: 0;
+    margin-bottom: 10px;
+  }
+  .header .userDetails .buttons{
+    position: absolute;
+    right: 20px;
+    flex-direction: column;
+
+  }
+  .header .userDetails button.btn-4 {
+  
+    width: 100px;
+    height: 25px;
+    background: #1b1a17;
+    color: #000;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: 0.5s;
+    border: none;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0px 0px 15px 15px;
+    background-color: #ffb23f;
+    background-image: linear-gradient(315deg, #ffb23f 0%, #FFDBA5 74%);
+    line-height: 42px;
+    padding: 0;
+  }
+}
+
+/* -----HEADER---- */
+
+
+
+
+
+/* ----- BIKE ITEMS ----- */
+
+.bike-item.no-bike{
+  color: white;
+  font-size: 20px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+
+}
+
+.bike-item {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  padding: 0.5rem;
+  margin: 1rem 0;
+  border-radius: 12px;
+  background-color: #1b1a1774;
+  background-image: linear-gradient(315deg, #47423379 0%, #1b1a178d 74%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+}
+
+.bike-item .bike-title {
+  color: #fff;
+  font-size: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.bike-item .bike-title span.date {
+  font-size: 14px;
+  color: #ff5e24;
+}
+.bike-item .bike-amount {
+  color: #fff;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #ff5e24;
+}
+
+.bike-item .bike-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.bike-item .bike-actions .edit-icon {
+  color: #fff;
+  font-size: 20px;
+  padding: 10px 10px 10px 12px;
+  margin: 10px;
+  border-radius: 7px;
+  background: rgb(171, 58, 0);
+  background: linear-gradient(
+    156deg,
+    rgba(171, 58, 0, 1) 0%,
+    rgba(224, 77, 1, 1) 53%,
+    rgba(255, 95, 0, 1) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.bike-item .bike-actions .delete {
+  cursor: pointer;
+  color: #fff;
+  font-size: 20px;
+  padding: 5px 10px;
+  margin: 10px;
+  border-radius: 7px;
+  background: rgb(171, 58, 0);
+  background: linear-gradient(
+    156deg,
+    rgba(171, 58, 0, 1) 0%,
+    rgba(224, 77, 1, 1) 53%,
+    rgba(255, 95, 0, 1) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.bike-item .bike-actions .edit-icon:hover,
+.bike-item .bike-actions .delete:hover {
+  background-color: #ff5e24;
+  background-image: linear-gradient(315deg, #ff5e24 0%, #cf3903 74%);
+}
+
+@media (max-width: 576px) {
+  .bike-item {
+    padding-top: 15px;
+    height: 110px;
+    align-items: flex-start;
+  }
+  .bike-item .bike-title {
+    font-size: 16px;
+  }
+
+  .bike-item .bike-title span.date {
+    margin-top: 5px;
+    font-size: 10px;
+  }
+
+.bike-item .bike-amount {
+  font-size: 16px;
+}
+.bike-item .bike-actions .edit-icon {
+  transform: scale(.8);
+}
+
+  .bike-item .bike-actions .delete {
+    margin: 0px;
+  transform: scale(.8);
+
+  }
+}
+
+/* ----- BIKE ITEMS ----- */
+
+
+
+
+/* ----- PAGINATION ----- */
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination li{
+  list-style: none;
+  padding: 1px 7px;
+  margin: 5px;
+  border: 1px solid #40a9ff;
+  background-color: white;
+}
+.pagination li:hover{
+  background-color: #40a9ff;
   color: white;
 }
-
-.App-link {
-  color: #61dafb;
+.pagination li button{
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.pagination li.current-page{
+  background-color: #40a9ff;
+  color: white;
 }
+/* ----- PAGINATION ----- */
