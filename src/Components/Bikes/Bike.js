@@ -1,14 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
 import { bikeData } from "../../App";
+import { useNavigate } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import { FaEdit } from "react-icons/fa";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 
 const Bike = (props) => {
+  const navigate = useNavigate();
   const [isSpinning, setSpinning] = useState(false);
-  const { user, bikeList, setBikeList, popupMsg, notificationPopup } =
-    useContext(bikeData);
+  const {
+    fromToDate,
+    setFromToDate,
+    user,
+    bikeList,
+    setBikeList,
+    popupMsg,
+    notificationPopup,
+  } = useContext(bikeData);
 
   const antIcon = (
     <LoadingOutlined style={{ fontSize: 24, color: "#ff4400" }} spin />
@@ -25,17 +34,28 @@ const Bike = (props) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user?.token}`,
         },
+        body: JSON.stringify({
+          startDate: fromToDate[0],
+          endDate: fromToDate[1],
+        }),
       })
         .then((res) => res.json())
         .then((data) => {
-          const updatedBikeList = bikeList.filter((bike) => {
-            return bike._id !== props.bikeDetails._id;
-          });
-          setBikeList(updatedBikeList);
-          setSpinning(false);
+          if (data.error) {
+            //setting notification pop
+            popupMsg.current = data.error;
+            notificationPopup("error");
+            setSpinning(false);
+          } else {
+            const updatedBikeList = bikeList.filter((bike) => {
+              return bike._id !== props.bikeDetails._id;
+            });
+            setBikeList(updatedBikeList);
+            setSpinning(false);
 
-          popupMsg.current = "Bike Booked SuccesFully!";
-          notificationPopup("success");
+            popupMsg.current = "Bike Booked SuccesFully!";
+            notificationPopup("success");
+          }
         });
     };
 
@@ -60,14 +80,13 @@ const Bike = (props) => {
               <div className="edit" type="button" onClick={bookBike}>
                 <i className="edit-icon">Book Bike</i>
               </div>
-
-              {/* <div className="delete">
-                    <i className="del-icon" 
-                    // onClick={deleteHandler}
-                    >
-                      <FaTimes />
-                    </i>
-                  </div> */}
+              <button
+                onClick={() =>
+                  navigate(`./bikeDetails/${props.bikeDetails._id}`)
+                }
+              >
+                More Details
+              </button>
             </div>
           </div>
         </div>

@@ -10,6 +10,7 @@ import FromTo from "./Components/FromTo";
 import Header from "./Components/Header";
 import BookBikes from "./Components/Bikes/BookBikes";
 import Reservations from "./Components/Reservations/Reservations";
+import BikeDetails from "./Components/Bikes/BikeDetails";
 
 export const bikeData = createContext();
 
@@ -22,13 +23,16 @@ function App() {
   const popupMsg = useRef();
   const [fromToDate, setFromToDate] = useState([null, null]);
   const [bikeList, setBikeList] = useState([]);
-  const [currentPageOfBikeList, setCurrentPageOfBikeList] = useState(1)
-  const [totalPageOfBikeList, setTotalPageOfBikeList] = useState()
+  const [currentPageOfBikeList, setCurrentPageOfBikeList] = useState(1);
+  const [totalPageOfBikeList, setTotalPageOfBikeList] = useState();
   const [bookedBikeList, setBookedBikeList] = useState([]);
+  const [bikeReviewsList, setBikeReviewsList] = useState([]);
+  const [currentPageOfReviewList, setCurrentPageOfReviewList] = useState(1);
+  const [totalPageOfReviewList, setTotalPageOfReviewList] = useState();
 
-
-
-  const URL = `http://localhost:5000/bikes?sortBy=createdAt:desc&isAvailable=true&limit=5&skip=${(currentPageOfBikeList===1)?0:(currentPageOfBikeList-1)*5}`;
+  const URL = `http://localhost:5000/bikes?sortBy=createdAt:desc&isAvailable=true&limit=5&skip=${
+    currentPageOfBikeList === 1 ? 0 : (currentPageOfBikeList - 1) * 5
+  }`;
 
   const antIcon = (
     <LoadingOutlined style={{ fontSize: 24, color: "#ff4400" }} spin />
@@ -51,12 +55,19 @@ function App() {
         .then((res) => res.json())
         .then((data) => {
           if (data.msg) {
-            return setBikeList([data]);
+            setBikeList([data]);
+            setSpinning(false);
+          } else if (data.error) {
+            //setting notification pop
+            popupMsg.current = data.error;
+            notificationPopup("error");
+            setSpinning(false);
+          } else {
+            setBikeList(data.bike);
+            setCurrentPageOfBikeList(data.currentPage);
+            setTotalPageOfBikeList(data.totalPage);
+            setSpinning(false);
           }
-          setBikeList(data.bike);
-          setCurrentPageOfBikeList(data.currentPage)
-          setTotalPageOfBikeList(data.totalPage)
-          setSpinning(false);
         });
     };
     // const fetchIncomes = async () => {
@@ -73,8 +84,7 @@ function App() {
     // };fetchIncomes();
 
     fetchBikes();
-  }, [isUserLoggedIn,currentPageOfBikeList]);
-
+  }, [isUserLoggedIn, currentPageOfBikeList]);
 
   const notificationPopup = (NotificationType) => {
     notification[NotificationType]({
@@ -97,9 +107,18 @@ function App() {
         setFromToDate,
         bikeList,
         setBikeList,
-        currentPageOfBikeList, setCurrentPageOfBikeList,
-        totalPageOfBikeList, setTotalPageOfBikeList,
-        bookedBikeList, setBookedBikeList
+        currentPageOfBikeList,
+        setCurrentPageOfBikeList,
+        totalPageOfBikeList,
+        setTotalPageOfBikeList,
+        currentPageOfReviewList,
+        setCurrentPageOfReviewList,
+        totalPageOfReviewList,
+        setTotalPageOfReviewList,
+        bookedBikeList,
+        setBookedBikeList,
+        bikeReviewsList,
+        setBikeReviewsList,
       }}
     >
       <div className="homeContainer">
@@ -108,7 +127,11 @@ function App() {
           <Routes>
             <Route path="/" element={<FromTo />} />
             <Route path="/bookBikes" element={<BookBikes />} />
-            <Route path="reservations" element={<Reservations/>} />
+            <Route
+              path="/bookbikes/bikeDetails/:bikeId"
+              element={<BikeDetails />}
+            />
+            <Route path="reservations" element={<Reservations />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="*" element={<FromTo />} />

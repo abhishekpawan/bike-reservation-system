@@ -6,7 +6,13 @@ import { Spin } from "antd";
 
 const Reservations = () => {
   const [isSpinning, setSpinning] = useState(false);
-  const { user,popupMsg,bookedBikeList, setBookedBikeList} = useContext(bikeData);
+  const {
+    user,
+    popupMsg,
+    notificationPopup,
+    bookedBikeList,
+    setBookedBikeList,
+  } = useContext(bikeData);
 
   const antIcon = (
     <LoadingOutlined style={{ fontSize: 24, color: "#ff4400" }} spin />
@@ -25,6 +31,11 @@ const Reservations = () => {
         .then((data) => {
           if (data.msg) {
             return setBookedBikeList([data]);
+          } else if (data.error) {
+            //setting notification pop
+            popupMsg.current = data.error;
+            notificationPopup("error");
+            setSpinning(false);
           }
           setBookedBikeList(data);
           //   setCurrentPageOfBikeList(data.currentPage)
@@ -41,6 +52,8 @@ const Reservations = () => {
     bikes = bookedBikeList.map((bookedBike) => {
       return <BookedBike key={bookedBike._id} bikeDetails={bookedBike} />;
     });
+  } else {
+    bikes = <p>No Reservations Available!</p>;
   }
   return (
     <Spin indicator={antIcon} spinning={isSpinning}>

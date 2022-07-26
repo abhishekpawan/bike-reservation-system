@@ -1,15 +1,16 @@
 import { Card } from "antd";
-import React,{useContext, useState} from 'react'
-import { bikeData } from '../../App'
+import React, { useContext} from "react";
 import { useParams } from "react-router-dom";
+import { bikeData, } from "../../App";
 
 const Pagination = (props) => {
+  const { setBikeList } = useContext(bikeData);
   const params = useParams()
   const pageNumbers = [];
-  const {totalPageOfBikeList,currentPageOfBikeList,setCurrentPageOfBikeList, setBikeList} = useContext(bikeData)
+  console.log();
   
 
-  for (let i = 1; i <= parseInt(totalPageOfBikeList); i++) {
+  for (let i = 1; i <= parseInt(props.totalPage); i++) {
     pageNumbers.push(i);
   }
 
@@ -20,13 +21,13 @@ const Pagination = (props) => {
           {pageNumbers.map((number) => (
             <li
               key={number}
-              className={currentPageOfBikeList === number ? "current-page" : ""}
+              className={props.currentPage === number ? "current-page" : ""}
             >
               <button
                 onClick={() =>{ 
-                  setCurrentPageOfBikeList(number)
-                  if(currentPageOfBikeList !== number && params.restaurantID===undefined){
-                    setBikeList([])}
+                  props.paginate(number)
+                  // if(props.currentPage !== number && params.restaurantID===undefined){
+                  //   setBikeList([])}
                 
               }}
                 className="page-link"

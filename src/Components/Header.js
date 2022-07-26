@@ -38,7 +38,7 @@ const Header = () => {
             {currentURL.split("/")[3] === "reservations" ? (
               <button
                 className="btn-4"
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/bookBikes")}
               >
                 Back
               </button>
@@ -47,7 +47,7 @@ const Header = () => {
                 className="btn-4"
                 onClick={() => navigate("/reservations")}
               >
-                Redervations
+                Reservations
               </button>
             )}
           </div>
