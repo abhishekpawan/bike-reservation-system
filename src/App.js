@@ -11,6 +11,7 @@ import Header from "./Components/Header";
 import BookBikes from "./Components/Bikes/BookBikes";
 import Reservations from "./Components/Reservations/Reservations";
 import BikeDetails from "./Components/Bikes/BikeDetails";
+import FilterResultPage from "./Components/Filter/FilterResultPage";
 
 export const bikeData = createContext();
 
@@ -30,6 +31,7 @@ function App() {
   const [currentPageOfReviewList, setCurrentPageOfReviewList] = useState(1);
   const [totalPageOfReviewList, setTotalPageOfReviewList] = useState();
 
+
   const URL = `http://localhost:5000/bikes?sortBy=createdAt:desc&isAvailable=true&limit=5&skip=${
     currentPageOfBikeList === 1 ? 0 : (currentPageOfBikeList - 1) * 5
   }`;
@@ -38,11 +40,6 @@ function App() {
     <LoadingOutlined style={{ fontSize: 24, color: "#ff4400" }} spin />
   );
 
-  useEffect(() => {
-    if (isUserLoggedIn === false) {
-      navigate("/login");
-    }
-  }, [isUserLoggedIn]);
 
   useEffect(() => {
     setSpinning(true);
@@ -84,13 +81,20 @@ function App() {
     // };fetchIncomes();
 
     fetchBikes();
-  }, [isUserLoggedIn, currentPageOfBikeList]);
+  }, [isUserLoggedIn, currentPageOfBikeList,window.location.href]);
 
   const notificationPopup = (NotificationType) => {
     notification[NotificationType]({
       message: `${popupMsg.current}`,
     });
   };
+  
+  useEffect(() => {
+    if (isUserLoggedIn === false) {
+      navigate("/login");
+      setSpinning(false)
+    }
+  }, [isUserLoggedIn]);
 
   return (
     <bikeData.Provider
@@ -131,6 +135,8 @@ function App() {
               path="/bookbikes/bikeDetails/:bikeId"
               element={<BikeDetails />}
             />
+            <Route path="/search/:searchValue" element={<FilterResultPage/>} />
+            <Route path="/filter/:avgRatingValue" element={<FilterResultPage/>} />
             <Route path="reservations" element={<Reservations />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />

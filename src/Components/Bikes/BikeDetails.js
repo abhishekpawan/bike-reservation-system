@@ -14,13 +14,14 @@ const BikeDetails = () => {
     user,
     bikeReviewsList,
     setBikeReviewsList,
-    isUserLoggedIn,
+    fromToDate,
     currentPageOfReviewList,
     setCurrentPageOfReviewList,
     totalPageOfReviewList,
     setTotalPageOfReviewList,
     popupMsg,
     notificationPopup,
+    setBikeList,
   } = useContext(bikeData);
   const [isSpinning, setSpinning] = useState(false);
 
@@ -71,12 +72,12 @@ const BikeDetails = () => {
           if (data.msg) {
             setBikeReviewsList([data]);
             setSpinning(false);
-          }else if (data.error) {
+          } else if (data.error) {
             //setting notification pop
             popupMsg.current = data.error;
             notificationPopup("error");
             setSpinning(false);
-          }  else {
+          } else {
             setBikeReviewsList(data.review);
             setCurrentPageOfReviewList(data.currentPage);
             setTotalPageOfReviewList(data.totalPage);
@@ -87,6 +88,43 @@ const BikeDetails = () => {
 
     fetchReviews();
   }, [currentPageOfReviewList]);
+
+  const bookBikeHandler = () => {
+    const URL = `http://localhost:5000/bookedBikes/${bikeId}`;
+    setSpinning(true);
+    const BookBikes = async () => {
+      await fetch(URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.token}`,
+        },
+        body: JSON.stringify({
+          startDate: fromToDate[0],
+          endDate: fromToDate[1],
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            //setting notification pop
+            popupMsg.current = data.error;
+            notificationPopup("error");
+            setSpinning(false);
+          } else {
+            const updatedBikeList = bikeList.filter((bike) => {
+              return bike._id !== bikeId;
+            });
+            setBikeList(updatedBikeList);
+            setSpinning(false);
+
+            popupMsg.current = "Bike Booked SuccesFully!";
+            notificationPopup("success");
+          }
+        });
+    };
+    BookBikes();
+  };
 
   const paginate = (pageNumber) => setCurrentPageOfReviewList(pageNumber);
 
@@ -112,7 +150,7 @@ const BikeDetails = () => {
             <p>{currentBike?.color}</p>
             <p>{currentBike?.location}</p>
             <p>{currentBike?.avgRating}</p>
-            <button>Book Bike</button>
+            <button onClick={bookBikeHandler}>Book Bike</button>
           </div>
         </div>
         <div className="row">

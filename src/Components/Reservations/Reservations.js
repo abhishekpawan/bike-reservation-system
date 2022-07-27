@@ -3,6 +3,7 @@ import { bikeData } from "../../App";
 import BookedBike from "./BookedBike";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
+import Pagination from "../Pagination/Pagination";
 
 const Reservations = () => {
   const [isSpinning, setSpinning] = useState(false);
@@ -13,12 +14,19 @@ const Reservations = () => {
     bookedBikeList,
     setBookedBikeList,
   } = useContext(bikeData);
+  const [currentPageofBookedBikeList, setCurrentPageofBookedBikeList] =
+    useState(1);
+  const [totalPageofBookedBikeList, setTotalPageofBookedBikeList] = useState();
 
   const antIcon = (
     <LoadingOutlined style={{ fontSize: 24, color: "#ff4400" }} spin />
   );
 
-  const URL = `http://localhost:5000/bookedBikes/all`;
+  const URL = `http://localhost:5000/bookedBikes/all?sortBy=createdAt:desc&limit=5&skip=${
+    currentPageofBookedBikeList === 1
+      ? 0
+      : (currentPageofBookedBikeList - 1) * 5
+  }`;
   useEffect(() => {
     setSpinning(true);
     const fetchBookedBikes = async () => {
@@ -30,34 +38,48 @@ const Reservations = () => {
         .then((res) => res.json())
         .then((data) => {
           if (data.msg) {
-            return setBookedBikeList([data]);
+            setBookedBikeList([data]);
+            setSpinning(false);
           } else if (data.error) {
             //setting notification pop
             popupMsg.current = data.error;
             notificationPopup("error");
             setSpinning(false);
+          } else if (data.bookedBike) {
+            setBookedBikeList(data.bookedBike);
+            setCurrentPageofBookedBikeList(data.currentPage);
+            setTotalPageofBookedBikeList(data.totalPage);
+            setSpinning(false);
           }
-          setBookedBikeList(data);
-          //   setCurrentPageOfBikeList(data.currentPage)
-          //   setTotalPageOfBikeList(data.totalPage)
-          setSpinning(false);
         });
     };
 
     fetchBookedBikes();
-  }, [popupMsg.current]);
+  }, [popupMsg.current, currentPageofBookedBikeList]);
 
   let bikes;
-  if (bookedBikeList.length > 0) {
+  if (bookedBikeList[0]?.msg) {
+    bikes = <div className="bike-item no-bike">No Reservations Available!</div>;
+  } else {
     bikes = bookedBikeList.map((bookedBike) => {
       return <BookedBike key={bookedBike._id} bikeDetails={bookedBike} />;
     });
-  } else {
-    bikes = <p>No Reservations Available!</p>;
   }
+
+  const paginate = (pageNumber) => setCurrentPageofBookedBikeList(pageNumber);
+
   return (
     <Spin indicator={antIcon} spinning={isSpinning}>
       {bikes}
+      {bookedBikeList[0]?.msg ? (
+        ""
+      ) : (
+        <Pagination
+          totalPage={totalPageofBookedBikeList}
+          currentPage={currentPageofBookedBikeList}
+          paginate={paginate}
+        />
+      )}
     </Spin>
   );
 };

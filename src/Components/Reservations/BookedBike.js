@@ -15,7 +15,6 @@ const BookedBike = (props) => {
     setBookedBikeList,
   } = useContext(bikeData);
   const [addReview, setAddReview] = useState(false);
-  const [isReviewAdded, setReviewAdded] = useState(false);
   const [rating, setRating] = useState();
   const [review, setReview] = useState();
 
@@ -25,50 +24,54 @@ const BookedBike = (props) => {
 
   const URL = `http://localhost:5000/bookedBikes/${props.bikeDetails._id}`;
   const REVIEW_URL = `http://localhost:5000/reviews/create/${props.bikeDetails.bikeId}`;
-  const cancelBooking = () => {
-    setSpinning(true);
-    const CancelBikes = async () => {
-      await fetch(URL, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user?.token}`,
-        },
-        body: JSON.stringify({
-          bookingStatus: "canceled",
-          isAvailable: true,
-          avgRating: props.bikeDetails.avgRating,
-        }),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            //setting notification pop
-            popupMsg.current = data.error;
-            notificationPopup("error");
-            setSpinning(false);
-          } else {
-            const updatedBookedBikeList = bookedBikeList.filter(
-              (bookedBike) => {
-                return bookedBike._id !== props.bikeDetails._id;
-              }
-            );
-            updatedBookedBikeList.unshift(data);
-            setBookedBikeList(updatedBookedBikeList);
-            setSpinning(false);
 
+  const updatingBookedBikeDetails = async (body) => {
+    await fetch(URL, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user?.token}`,
+      },
+      body: JSON.stringify(body),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) {
+          //setting notification pop
+          popupMsg.current = data.error;
+          notificationPopup("error");
+          setSpinning(false);
+        } else {
+          const updatedBookedBikeList = bookedBikeList.filter((bookedBike) => {
+            return bookedBike._id !== props.bikeDetails._id;
+          });
+          updatedBookedBikeList.unshift(data);
+          setBookedBikeList(updatedBookedBikeList);
+          setSpinning(false);
+          if (!body.isReviewed) {
             popupMsg.current = "Booking Canceled SuccesFully!";
             notificationPopup("success");
           }
-        });
-    };
-    CancelBikes();
+        }
+      });
+  };
+  const cancelBooking = () => {
+    setSpinning(true);
+
+    updatingBookedBikeDetails({
+      bookingStatus: "canceled",
+      isAvailable: true,
+      avgRating: props.bikeDetails.avgRating,
+    });
   };
 
   const reviewSubmitHandler = (e) => {
     e.preventDefault();
     setAddReview(false);
-    const reviewData = {};
+    const reviewData = {
+      avgRating: parseInt(rating),
+      review,
+    };
 
     const addReviews = async () => {
       await fetch(REVIEW_URL, {
@@ -77,10 +80,7 @@ const BookedBike = (props) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user?.token}`,
         },
-        body: JSON.stringify({
-          avgRating: parseInt(rating),
-          review,
-        }),
+        body: JSON.stringify(reviewData),
       })
         .then((res) => res.json())
         .then((data) => {
@@ -93,20 +93,28 @@ const BookedBike = (props) => {
           } else {
             popupMsg.current = "Review Added SuccesFully!";
             notificationPopup("success");
-            setReviewAdded(true)
           }
         });
     };
     addReviews();
+    updatingBookedBikeDetails({
+      isReviewed: true,
+    });
     console.log(reviewData);
   };
 
   const cancelHandler = () => {
     setAddReview(false);
-    setRating("");
+    setRating("none");
     setReview("");
   };
 
+  var dateUTC  = new Date(props.bikeDetails.createdAt);
+  dateUTC = dateUTC.getTime() 
+  var DateIST = new Date(dateUTC);
+
+  const bookingDate = `${DateIST.toString().split(" ")[2]} ${DateIST.toString().split(" ")[1]} ${DateIST.toString().split(" ")[3]} ${DateIST.toString().split(" ")[4]} `
+ 
   return (
     <Spin indicator={antIcon} spinning={isSpinning}>
       <div className="bike-item row">
@@ -114,9 +122,8 @@ const BookedBike = (props) => {
           <span>{props.bikeDetails.model}</span>
           <span className="date">
             {props.bikeDetails.color} {props.bikeDetails.location}{" "}
-            {props.bikeDetails.bookingStatus}
-            {props.bikeDetails.startDate}
-            {props.bikeDetails.endDate}
+            {props.bikeDetails.bookingStatus} {props.bikeDetails.startDate} {props.bikeDetails.endDate} {" "}
+            Booked At: {bookingDate}
           </span>
         </div>
         <div className="col-6 col-lg-4">
@@ -134,8 +141,8 @@ const BookedBike = (props) => {
               )}
             </div>
             <div className="col-12 col-sm-6 bike-actions">
-              {props.bikeDetails.bookingStatus === "booked" && isReviewAdded === false ? (
-                
+              {props.bikeDetails.bookingStatus === "booked" &&
+              props.bikeDetails.isReviewed === false ? (
                 <button onClick={() => setAddReview(true)}>Add a Review</button>
               ) : (
                 ""

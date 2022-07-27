@@ -12,9 +12,9 @@ const BikeList = () => {
       return <Bike key={bike._id} bikeDetails={bike} />;
     });
   } 
-  // else if (bikeList.length === 0) {
-  //   bikes = <div className="bike-item no-bike">No bikes Found!</div>;
-  // }
+  else if (bikeList[0]?.msg) {
+    bikes = <div className="bike-item no-bike">No bikes Found!</div>;
+  }
 
   return <div>{bikes}</div>;
 };
